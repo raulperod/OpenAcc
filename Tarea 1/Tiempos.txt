@@ -1,0 +1,10 @@
+    Ejercicio                        CPU             GPU
+ 
+Suma de Matrices	 			 0.003341 seg    0.130894 seg
+suma de Matrices2   			 0.002631 seg    0.130582 seg
+Producto punto         			 0.000593 seg    0.134574 seg
+PI                  		     0.000842 seg    0.127690 seg
+Multiplicacion Matrices          0.164035 seg    0.542676 seg
+Multiplicacion Matrices2		 0.173372 seg    0.151803 seg
+Multiplicacion Matrices3         0.000357 seg    0.131045 seg
+
