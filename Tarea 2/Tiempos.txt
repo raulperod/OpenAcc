@@ -1,5 +1,5 @@
 Tiempo 				cpu 				gpu	
- 
+
 suma3d         	0.001861 seg         0.133937 seg
 suma3d lineal	0.001420 seg         0.130776 seg 
 calor2d         38.284555 seg        4.971165 seg
