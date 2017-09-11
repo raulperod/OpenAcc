@@ -20,7 +20,6 @@ int main( int argc, char* argv[] )
 	}
 
 	StartTimer();
-
 	#pragma acc data copyin(a,b), copyout(c)
 	{
 	#pragma acc kernels
@@ -37,5 +36,5 @@ int main( int argc, char* argv[] )
 	double runtime = GetTimer();
 	printf(" total: %f s\n", runtime / 1000.f);
 	//printf("%f %f \n", c[0][0], c[999][999]);
-    return 0;
+   return 0;
 }

@@ -24,17 +24,17 @@ int main(){
 	StartTimer();
 	#pragma acc data copyin(x, y), copyout(contador)
 	{
-		#pragma acc parallels
-		{
-			for(int i = 0 ; i < N ; i++){
-				if( (x[i] * x[i] + y[i] * y[i]) <= 1.0f){
-					contador++;
-				}
-			}
-		}
+   #pragma acc parallels
+   {
+      for(int i = 0 ; i < N ; i++){
+         if( (x[i] * x[i] + y[i] * y[i]) <= 1.0f){
+            contador++;
+         }
+      }
+	}
 	}
 	double runtime = GetTimer();
 	printf(" total: %f s\n", runtime / 1000.f);
 	//printf("Pi: %f\n", 4.0 * contador / N );
-  return 0;
+   return 0;
 }

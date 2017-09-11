@@ -13,11 +13,11 @@ int main( int argc, char* argv[] )
 	memset(b, 0, N*sizeof(float));
 
 	for(int i = 0 ; i < N ; i++){
-			a[i] = 1.0f;
-			b[i] = 2.0f;
+      a[i] = 1.0f;
+      b[i] = 2.0f;
 	}
 
-  StartTimer();
+   StartTimer();
 
 	#pragma acc data copyin(a,b), copyout(productoPunto)
 	{
@@ -33,5 +33,5 @@ int main( int argc, char* argv[] )
 	double runtime = GetTimer();
 	printf(" total: %f s\n", runtime / 1000.f);
 	//printf("El producto punto es: %f\n", productoPunto);
-  return 0;
+   return 0;
 }
