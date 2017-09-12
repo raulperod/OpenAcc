@@ -5,7 +5,7 @@
 int main(){
 
     int matriz[N][M], nnz = 0, contador = 0, indice = 0, fila = -1;
-    int *val, *col_ind, *row_ptr;
+    int *val, *col_ind, *row_ptr, *u, *resultado;
     memset(matriz, 0, N*M*sizeof(int));
     // llenar la matriz
     for(int i=0 ; i < N ; i++){
@@ -62,5 +62,23 @@ int main(){
     // imprimir row_ptr
     for(int i=0; i < (N+1); i++){
         printf("row_ptr[%d] = %d\n", i, row_ptr[i]);
+    }
+    // ---------------------------------------------
+    // lleno el vector
+    u = (int*)malloc( M * sizeof(int));
+    for(int i=0;i<M;i++){
+        u[i] = i+1;
+    }
+    // Multiplicacion Matriz * u
+    resultado = (int*)malloc( N * sizeof(int));
+    for(int i=0, indice=0 ; i < N  ; i++){
+        resultado[i] = 0;
+        for(int j=0 ; j < (row_ptr[i+1] - row_ptr[i]) ; j++, indice++){
+            resultado[i] += val[indice] * u[ col_ind[indice]-1 ];
+        }
+    }
+    // imprimir resultado
+    for(int i=0; i < N; i++){
+        printf("resultado[%d] = %d\n", i, resultado[i]);
     }
 }
