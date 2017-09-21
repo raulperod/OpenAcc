@@ -1,19 +1,22 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define N 500
-#define M 500
+#define N 10
+#define M 10
+#define L 10
 
 int main(){
 
-    int matriz[N*M], nnz = 0, contador = 0, indice = 0, fila = -1;
-    int *val, *col_ind, *row_ptr, *u, *resultado;
-    memset(matriz, 0, N*M*sizeof(int));
+    int nnz = 0, contador = 0, indice = 0, fila = -1, suma = 0;
+    int *matriz, *val, *col_ind, *row_ptr, *u, *resultado;
     // llenar la matriz
+    matriz = (int*)malloc( N * M * sizeof(int));
     for(int i=0 ; i < N ; i++){
         for(int j=0; j < M; j++){
-            if( i==j ){
+            if( j >= i ){
                 matriz[j+i*M] = 1;
+            }else{
+                matriz[j+i*M] = 0;
             }
         }
     }
@@ -69,32 +72,38 @@ int main(){
     */
     // ---------------------------------------------
     // lleno el vector
-    u = (int*)malloc( M * sizeof(int));
-    for(int i=0;i<M;i++){
-        u[i] = 1;
+    u = (int*)malloc( M * L * sizeof(int));
+    for(int i = 0 ; i < M ; i++){
+        for(int j = 0 ; j < L ; j++){
+            u[j+i*L] = 1;
+        }
     }
     // Multiplicacion Matriz * u
-    resultado = (int*)malloc( N * sizeof(int));
-    #pragma acc data copyin(val[0:nnz],u[0:N],col_ind[0:nnz],row_ptr[0:N+1]) copyout(resultado[0:N])
+    resultado = (int*)malloc( N * L * sizeof(int));
+    #pragma acc data copyin(val[0:nnz],u[0:M*L],col_ind[0:nnz],row_ptr[0:N+1]) copyout(resultado[0:N*L])
     {
     #pragma acc parallel
-    {   
-        indice=0;
+    {
         #pragma acc loop
-        for(int i=0 ; i < N ; i++){
-            resultado[i] = 0;
-            #pragma acc loop
-            for(int j=0 ; j < (row_ptr[i+1] - row_ptr[i]) ; j++){
-                resultado[i] += val[indice] * u[ col_ind[indice]-1 ];
-                indice++;
-            }
-        }
+		for (int i = 0; i < N; i++){
+			#pragma acc loop
+			for (int j = 0; j < L; j++){
+				suma = 0;
+                #pragma acc loop
+				for (int k = row_ptr[i]-1; k < row_ptr[i+1]-1; k++){
+                    suma += val[k] * u[j + ( (col_ind[k]-1) * L) ];
+                }
+				resultado[j+i*L] = suma;
+			}
+		}
     }            
     }
     
     // imprimir resultado
     for(int i=0; i < N; i++){
-        printf("resultado[%d] = %d\n", i, resultado[i]);
+        for(int j=0 ; j < L ; j++){
+            printf("resultado[%d][%d] = %d\n", i, j, resultado[j+i*L]);
+        }
     }
     
     free(val);

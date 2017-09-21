@@ -1,6 +1,5 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include "timer.h"
 #define N 500
 #define M 500
 #define L 1
@@ -26,7 +25,6 @@ int main(){
     	b[i] = 1.0f;
 	}
 
-	StartTimer();
 	#pragma acc data copyin(a, b), copyout(c)
 	{
 	#pragma acc parallels
@@ -45,12 +43,10 @@ int main(){
 		}
 	}
 	}
-	/*
+	
 	for (int i= 0; i < N*L; i++){
 		printf("c[%i]: %f\n", i, c[i]);
 	}
-	*/	
-	double runtime = GetTimer();
-	printf(" total: %f s\n", runtime / 1000.f);
+		
   	return 0;
 }
