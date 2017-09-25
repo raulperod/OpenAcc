@@ -71,14 +71,14 @@ int main(){
     }
     */
     // ---------------------------------------------
-    // lleno el vector
+    // lleno la matriz
     u = (int*)malloc( M * L * sizeof(int));
     for(int i = 0 ; i < M ; i++){
         for(int j = 0 ; j < L ; j++){
             u[j+i*L] = 1;
         }
     }
-    // Multiplicacion Matriz * u
+    // Multiplicacion CRS * Matriz
     resultado = (int*)malloc( N * L * sizeof(int));
     #pragma acc data copyin(val[0:nnz],u[0:M*L],col_ind[0:nnz],row_ptr[0:N+1]) copyout(resultado[0:N*L])
     {
