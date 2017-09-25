@@ -6,8 +6,9 @@ void llenarMatriz(int*, int);
 
 int main(){
 
-    int NC = 3, NUM_BLOQUES = 2;
+    int NC = 2, NUM_BLOQUES = 3;
     int *matriz, *u, *resultado;
+    int suma;
 
     matriz = (int*)malloc( NC * NC * sizeof(int));
     u = (int*)malloc( NC * NUM_BLOQUES * sizeof(int));
@@ -15,6 +16,20 @@ int main(){
 
     llenarMatriz( matriz, NC);
     llenarVector( u, NC * NUM_BLOQUES);
+
+    for(int i=0 ; i < NUM_BLOQUES ; i++){
+        for(int j=0 ; j < NC ; j++){
+            suma = 0;
+            for(int k=0 ; k < NC ; k++){
+                suma += matriz[k+j*NC] * u[i*NC+k];
+            }
+            resultado[i*NC+j] = suma;
+        }
+    }
+
+    for(int i=0 ; i < NC*NUM_BLOQUES ; i++){
+        printf("R[%d] = %d\n", i, resultado[i]);
+    }
 
     free(matriz);
     free(u);
@@ -28,9 +43,10 @@ void llenarMatriz(int *mat, int n){
 
     for(int i=0 ; i < n ; i++){
         for(int j=0; j < n; j++){
-            matriz[j+i*n] = j + i * n + 1;
+            matriz[j+i*n] = j+i*n+1;
         }
     }
+
 }
 
 void llenarVector(int *vec, int n){
