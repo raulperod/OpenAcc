@@ -16,15 +16,23 @@ int main(){
 
     llenarMatriz( matriz, NC);
     llenarVector( u, NC * NUM_BLOQUES);
-
-    for(int i=0 ; i < NUM_BLOQUES ; i++){
-        for(int j=0 ; j < NC ; j++){
-            suma = 0;
-            for(int k=0 ; k < NC ; k++){
-                suma += matriz[k+j*NC] * u[i*NC+k];
+    #pragma acc data copyin(matriz[0:NC*NC], u[0:NC*NUM_BLOQUES]) copyout(resultado[0:NC*NUM_BLOQUES])
+    {
+    #pragma acc parallel
+    {    
+        #pragma acc loop    
+        for(int i=0 ; i < NUM_BLOQUES ; i++){
+            #pragma acc loop
+            for(int j=0 ; j < NC ; j++){
+                suma = 0;
+                #pragma acc loop
+                for(int k=0 ; k < NC ; k++){
+                    suma += matriz[k+j*NC] * u[i*NC+k];
+                }
+                resultado[i*NC+j] = suma;
             }
-            resultado[i*NC+j] = suma;
-        }
+        }   
+    }
     }
 
     for(int i=0 ; i < NC*NUM_BLOQUES ; i++){

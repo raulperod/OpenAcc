@@ -15,27 +15,34 @@ int main(){
 
     llenarMatriz( matriz, NC, NC);
     llenarMatriz( u, NC * NUM_BLOQUES, M);
-
-    for(int i=0 ; i < NUM_BLOQUES ; i++){
-        for(int j=0 ; j < NC ; j++){
-            for(int k=0 ; k < M ; k++){
-                suma = 0;
-                for(int l=0 ; l < NC ; l++){
-                    suma += matriz[l + j*NC] * u[k + l*M + i*NC*M];
-                    //printf("suma += matriz[%d] * u[%d]\n", l + j*NC, k + l*M + i*NC*M);
+    #pragma acc data copyin(matriz[0:NC*NC], u[0:NC*NUM_BLOQUES]) copyout(resultado[0:NC*NUM_BLOQUES])
+    {
+    #pragma acc parallel
+    { 
+        #pragma acc loop   
+        for(int i=0 ; i < NUM_BLOQUES ; i++){
+            #pragma acc loop   
+            for(int j=0 ; j < NC ; j++){
+                #pragma acc loop   
+                for(int k=0 ; k < M ; k++){
+                    suma = 0;
+                    #pragma acc loop   
+                    for(int l=0 ; l < NC ; l++){
+                        suma += matriz[l + j*NC] * u[k + l*M + i*NC*M];
+                    }
+                    resultado[k + j*M + i*NC*M] = suma;
                 }
-                resultado[k + j*M + i*NC*M] = suma;
-                //printf("R[%d] = %d\n", k + j*M + i*NC*M, resultado[k + j*M + i*NC*M]);
             }
-        }
-    }  
-
+        }  
+    }
+    }
+/*
     for(int i=0 ; i < NC*NUM_BLOQUES ; i++){
         for(int j=0 ; j < M ; j++){
             printf("R[%d][%d] = %d\n", i, j, resultado[j+i*M]);
         }
     }
-
+*/
     free(matriz);
     free(u);
     free(resultado);
